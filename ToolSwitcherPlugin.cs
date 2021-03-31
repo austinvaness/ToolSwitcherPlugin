@@ -6,20 +6,12 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.Game.Components;
 using Sandbox.ModAPI;
-using Sandbox.Game.Entities;
-using Sandbox.Game.Weapons;
 using Sandbox.Game.Entities.Character;
-using Sandbox.Game.Screens.Helpers;
 using avaness.ToolSwitcherPlugin.Tools;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using avaness.ToolSwitcherPlugin.Slot;
-using Sandbox.ModAPI.Weapons;
 using VRage.Input;
 using DarkHelmet.BuildVision2;
-using Sandbox.Game;
-using VRage.Game.Entity;
-using VRage;
-using System.Collections.Generic;
 using avaness.ToolSwitcherPlugin.Definitions;
 
 namespace avaness.ToolSwitcherPlugin
@@ -35,13 +27,11 @@ namespace avaness.ToolSwitcherPlugin
             private bool start;
             private ToolGroup group;
             private PlayerCharacter inv;
-            private BvApiClient client = new BvApiClient();
-            //private readonly List<ItemEvent> itemRemoved = new List<ItemEvent>();
-            //private readonly List<ItemEvent> itemAdded = new List<ItemEvent>();
 
             public override void Init(MyObjectBuilder_SessionComponent sessionComponent)
             {
                 Instance = this;
+                new BvApiClient();
                 BvApiClient.Init("ToolSwitcherPlugin");
                 MyLog.Default.WriteLineAndConsole("Tool Plugin Session loaded.");
             }
@@ -50,7 +40,6 @@ namespace avaness.ToolSwitcherPlugin
             {
                 if (inv != null)
                 {
-                    //inv.ItemRemoved -= Inv_ItemRemoved;
                     inv.Unload();
                 }
                 Instance = null;
@@ -87,23 +76,10 @@ namespace avaness.ToolSwitcherPlugin
                         inv.CheckForUpgrade = false;
                         group.EquipUpgrade(inv);
                     }
-                    /*if(disabledItem != null)
-                    {
-                        MyToolbar toolbar = ch.Toolbar;
-                        if (toolbar != null)
-                            group.ReplaceItem(disabledItem, ch.GetInventory(), disabledSlot, toolbar);
-                        disabledItem = null;
-                    }*/
+
                     if(input != 0)
                     {
                         group.EquipNext(inv, input > 0);
-                        /*var hand = GetHand(ch);
-                        if (hand != null)
-                        {
-                            MyToolbar toolbar = ch.Toolbar;
-                            if (toolbar != null)
-                                group.EquipNext(hand, ch.GetInventory(), toolbar, input > 0);
-                        }*/
                     }
                 }
 
@@ -118,37 +94,16 @@ namespace avaness.ToolSwitcherPlugin
                 Definitions.Add<MyObjectBuilder_HandDrillDefinition>();
                 group = new ToolGroup(Definitions);
                 inv = new PlayerCharacter(MySession.Static.LocalHumanPlayer, Definitions);
-                //inv.ItemRemoved += Inv_ItemRemoved;
-                //inv.ItemAdded += Inv_ItemAdded;
 
                 DisableModVersion();
                 start = true;
             }
-
-            /*private void Inv_ItemAdded(HandItem item, IEnumerable<ToolSlot> slots)
-            {
-                foreach (ToolSlot slot in slots)
-                    itemAdded.Add(new ItemEvent(item, slot));
-            }
-
-            private void Inv_ItemRemoved(HandItem item, ToolSlot slot)
-            {
-                itemRemoved.Add(new ItemEvent(item, slot));
-            }*/
 
             private bool IsEnabled()
             {
                 return  MyAPIGateway.Gui.GetCurrentScreen == MyTerminalPageEnum.None && !MyAPIGateway.Gui.IsCursorVisible && !MyAPIGateway.Gui.ChatEntryVisible
                     && !MyAPIGateway.Session.IsCameraUserControlledSpectator && string.IsNullOrWhiteSpace(MyAPIGateway.Gui.ActiveGamePlayScreen) && (!BvApiClient.Registered || !BvApiClient.Open);
             }
-
-            /*private HandItem GetHand(MyCharacter ch)
-            {
-                var temp = ch.EquippedTool as IMyHandheldGunObject<MyToolBase>;
-                if (temp != null && !(temp is IMyBlockPlacerBase))
-                    return new HandItem(temp);
-                return null;
-            }*/
 
             private class ItemEvent
             {

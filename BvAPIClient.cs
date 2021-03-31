@@ -107,11 +107,7 @@ namespace DarkHelmet.BuildVision2
         public BvApiClient()
         {
             if (instance == null)
-            {
                 instance = this;
-            }
-            else
-                throw new Exception("Only one instance of BvApiClient can exist at any given time.");
         }
 
         public static void Init(string modName)
