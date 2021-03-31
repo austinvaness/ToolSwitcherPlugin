@@ -48,17 +48,11 @@ namespace avaness.ToolSwitcherPlugin
             public override void UpdateAfterSimulation()
             {
                 if (MySession.Static == null)
-                {
-                    MyAPIGateway.Utilities.ShowNotification($"No session!", 16);
                     return;
-                }
 
                 MyCharacter ch = MySession.Static.LocalCharacter;
                 if (ch == null)
-                {
-                    MyAPIGateway.Utilities.ShowNotification($"No character!", 16);
                     return;
-                }
 
                 if (!start)
                     Start();
@@ -83,7 +77,6 @@ namespace avaness.ToolSwitcherPlugin
                     }
                 }
 
-                MyAPIGateway.Utilities.ShowNotification($"Working.", 16);
             }
 
 
