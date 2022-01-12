@@ -109,7 +109,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>@echo off
-set target="C:\Program Files\Steam\steamapps\workshop\content\244850\2292390607\Tool_Switcher.plugin "
+set target="C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers\Bin64\Plugins\Local\ToolSwitcher.dll "
 echo %25target%25
 set counter=1
 :waitfile
